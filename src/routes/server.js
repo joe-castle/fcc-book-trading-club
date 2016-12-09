@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import express from 'express';
 // import session from 'express-session';
-// import connectMongo from 'connect-mongo';
+// import connectRedis from 'connect-redis';
 // import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
 
@@ -11,17 +11,16 @@ import render from '../server-render';
 import books from '../controllers/books';
 import users from '../controllers/users';
 
-const app = express();
-// const MongoStore = connectMongo(session);
+import client from '../client';
 
-mongoose.Promise = global.Promise;
-mongoose.connect('localhost:27017/booktradingclub');
+const app = express();
+// const RedisStore = connectRedis(session);
 
 app.use('/assets', express.static(`${__dirname}/../assets`));
 app.use(bodyParser.json());
 // app.use(cookieParser());
 // app.use(session({
-//   store: new MongoStore({ mongooseConnect: mongoos.connection }),
+//   store: new RedisStore({ client }),
 //   secret: 'NEEDS TO BE CHANGED',
 //   resave: false,
 //   saveUninitialized: false
@@ -29,7 +28,7 @@ app.use(bodyParser.json());
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(books);
-app.use(users);
+// app.use(users);
 app.get('*', render);
 
 export default app;
