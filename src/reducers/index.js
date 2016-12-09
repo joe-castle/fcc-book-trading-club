@@ -1,9 +1,9 @@
 import { combineReducers } from 'redux';
 import { routerReducer } from 'react-router-redux';
 
-import todos from './todos';
+import books from './books';
 
 export default combineReducers({
-  todos,
+  books,
   routing: routerReducer,
 });
