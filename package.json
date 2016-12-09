@@ -21,7 +21,10 @@
   "license": "MIT",
   "dependencies": {
     "aphrodite": "^1.1.0",
+    "axios": "^0.15.3",
+    "bcrypt": "^1.0.1",
     "bluebird": "^3.4.0",
+    "body-parser": "^1.15.2",
     "express": "^4.13.4",
     "mongoose": "^4.7.2",
     "passport": "^0.3.2",
