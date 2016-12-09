@@ -1,13 +1,12 @@
-import { Schema, model } from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
 
-const usersSchema = new Schema({
+export default mongoose.model('Users', new Schema({
   name: String,
   email: String,
   password: String,
   city: String,
   state: String,
+  ownBooks: Array,
   outboundTradeRequests: Array,
   inboundTradeRequests: Array,
-});
-
-export default model('Users', usersSchema);
+}));

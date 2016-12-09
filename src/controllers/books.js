@@ -1,7 +1,8 @@
 import { Router } from 'express';
 import axios from 'axios';
 
-import Books from '../models/books';
+import Books from '../models/Books';
+import Users from '../models/Users';
 
 const booksRouter = Router();
 
@@ -26,21 +27,36 @@ booksRouter.post('/api/books/add/:title', (req, res) => {
       Books.findOne({ title: data.items[0].volumeInfo.title })
         .then(book => {
 
-          if (!book) {
-            book = Books({
-              title: data.items[0].volumeInfo.title,
-              img_url: data.items[0].volumeInfo.imageLinks.thumbnail,
-              owners: ['owner_one']
+          Books.create({
+            title: data.items[0].volumeInfo.title,
+            img_url: data.items[0].volumeInfo.imageLinks.thumbnail,
+            owner: 'owner_one' // req.user._id
+          })
+            .then(book => { 
+              res.send(book); 
             });
-          } else {
-            if (!book.owners.includes('owner_two')) {
-              book.owners.push('owner_two')
-            }
-          }
 
-          book.save().then(book => { res.send(book); });
         });
   });
+});
+
+booksRouter.put('/api/books/trade-request/:id', (req, res) => {
+  Books.findById(req.params.id)
+    .then(book => {
+      if (book.owner === 'owner_one' /* req.user._id */) {
+        return res.send('You own that book!');
+      } 
+
+      Users.findById('owner_one', /* req.user._id */)
+        .then(user => {
+          user.update({  })
+        })
+
+        Users.find()
+
+      book.update({ requestForTrade: 'owner_one' /* req.user._id */ });
+
+    });
 });
 
 booksRouter.delete('/api/books/delete/:id', (req, res) => {

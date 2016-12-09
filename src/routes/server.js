@@ -3,13 +3,13 @@ import express from 'express';
 // import session from 'express-session';
 // import connectMongo from 'connect-mongo';
 // import cookieParser from 'cookie-parser';
-// import bodyParser from 'body-parser';
+import bodyParser from 'body-parser';
 
-// import passport from '../strategies/local';
+import passport from '../strategies/local';
 import render from '../server-render';
 
 import books from '../controllers/books';
-
+import users from '../controllers/users';
 
 const app = express();
 // const MongoStore = connectMongo(session);
@@ -18,7 +18,7 @@ mongoose.Promise = global.Promise;
 mongoose.connect('localhost:27017/booktradingclub');
 
 app.use('/assets', express.static(`${__dirname}/../assets`));
-// app.use(bodyParser.json());
+app.use(bodyParser.json());
 // app.use(cookieParser());
 // app.use(session({
 //   store: new MongoStore({ mongooseConnect: mongoos.connection }),
@@ -26,9 +26,10 @@ app.use('/assets', express.static(`${__dirname}/../assets`));
 //   resave: false,
 //   saveUninitialized: false
 // }));
-// app.use(passport.initialize());
-// app.use(passport.session());
+app.use(passport.initialize());
+app.use(passport.session());
 app.use(books);
+app.use(users);
 app.get('*', render);
 
 export default app;
