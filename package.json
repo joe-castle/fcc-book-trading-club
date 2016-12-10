@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "NODE_ENV=production node build/server.js",
-    "serv": "nodemon --exec babel-node src/server.js",
+    "serv": "NODE_ENV=development nodemon --exec babel-node src/server.js",
     "dev": "NODE_ENV=development node webpack.devserver.js",
     "clean": "rimraf build/",
     "lint": "eslint --format 'node_modules/eslint-friendly-formatter' src test",

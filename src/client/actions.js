@@ -23,7 +23,6 @@ export default (hash) => ({
   getAll() {
     return client.hgetallAsync(hash)
       .then(data => {
-        console.log(data);
         if (data) {
           return Object.keys(data)
             .map(x => JSON.parse(data[x]))
