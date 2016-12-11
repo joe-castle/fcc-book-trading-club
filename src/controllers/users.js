@@ -5,6 +5,30 @@ import passport from '../strategies/local';
 
 const users = Router();
 
+// const user = new Users({
+//   id: 'rkYaTyo7l',
+//   name: 'joe',
+//   email: 'test@test.com',
+//   password: '$2a$10$E0/u2Kded2tizBmRwPQVE.fsTn0E/XznK1P0HF5jNcpSWa.n/Tmrm',
+//   city: 'london',
+//   state: 'essex',
+//   ownBooks: ['rkkiyxjXx'],
+//   outboundTradeRequests: [],
+//   inboundTradeRequests: [],
+// });
+
+users.put('/api/users', (req, res) => {
+  // TODO: const { user } = req;
+
+  Users.get(user.id)
+    .then((user) => {
+      user
+        .update(req.body)
+        .save()
+        .then(() => res.send(user));
+    });
+});
+
 users.post('/signup', (req, res) => {
   if (!req.body.email || !req.body.name || !req.body.password) {
     res.status(400)
@@ -22,13 +46,14 @@ users.post('/signup', (req, res) => {
             password: req.body.password,
           });
 
-          newUser.encryptPassword()
+          newUser
+            .encryptPassword()
             .save()
             .then(() => {
               req.login(newUser, (err) => {
                 if (err) throw err;
 
-                res.status(201).send(newUser.exclude('password'));
+                res.status(201).send(newUser /* TODO:.exclude('password')*/);
               });
             });
         }

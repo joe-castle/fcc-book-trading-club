@@ -47,8 +47,8 @@ class Users {
     this.inboundTradeRequests = inboundTradeRequests;
   }
 
-  encryptPassword() {
-    this.password = bcrypt.hashSync(this.password, 10);
+  encryptPassword(password) {
+    this.password = bcrypt.hashSync(password || this.password, 10);
 
     return this;
   }
@@ -64,7 +64,7 @@ class Users {
     this.outboundTradeRequests = outboundTradeRequests || this.outboundTradeRequests;
     this.inboundTradeRequests = inboundTradeRequests || this.inboundTradeRequests;
 
-    if (password) this.encryptPassword();
+    if (password) this.encryptPassword(password);
 
     return this;
   }
