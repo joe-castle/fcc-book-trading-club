@@ -1,5 +1,4 @@
 import { Router } from 'express';
-import bcrypt from 'bcrypt';
 
 import Users from '../models/Users';
 import passport from '../strategies/local';
@@ -23,13 +22,15 @@ users.post('/signup', (req, res) => {
             password: req.body.password,
           });
 
-          newUser.encryptPassword().save();
+          newUser.encryptPassword()
+            .save()
+            .then(() => {
+              req.login(newUser, (err) => {
+                if (err) throw err;
 
-          req.login(newUser, (err) => {
-            if (err) throw err;
-
-            res.status(201).send(newUser.exclude('password'));
-          });
+                res.status(201).send(newUser.exclude('password'));
+              });
+            });
         }
       });
   }

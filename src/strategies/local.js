@@ -17,9 +17,9 @@ passport.use(new Strategy({
             if (!res) return done(null, false);
             return done(null, user);
           })
-          .catch((err) => { throw err; });
+          .catch(err => done(null, err));
       })
-      .catch(err => done(err));
+      .catch((err) => { throw err; });
   },
 ));
 

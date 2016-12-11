@@ -57,15 +57,16 @@ class Users {
     return users.set(this.id, this);
   }
 
-  update({ password, city, state, outboundTradeRequests, inboundTradeRequests }) {
+  update({ password, city, state, ownBooks, outboundTradeRequests, inboundTradeRequests }) {
     this.city = city || this.city;
     this.state = state || this.state;
+    this.ownBooks = ownBooks || this.ownBooks;
     this.outboundTradeRequests = outboundTradeRequests || this.outboundTradeRequests;
     this.inboundTradeRequests = inboundTradeRequests || this.inboundTradeRequests;
 
     if (password) this.encryptPassword();
 
-    return this.save();
+    return this;
   }
 
   exclude(toExclude) {

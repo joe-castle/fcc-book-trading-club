@@ -1,9 +1,9 @@
 import { generate } from 'shortid';
 
 import actions from '../client/actions';
+import Users from '../models/Users';
 
 const books = actions('books');
-const users = actions('users');
 
 class Books {
   static get(id) {
@@ -32,18 +32,17 @@ class Books {
     this.owner = owner;
     this.requestedForTradeBy = requestedForTradeBy;
 
-    return this.save();
+    return this;
   }
 
   delete() {
     return books.del(this.id);
   }
 
-  trade(type, userID) {
-    Promise.all([users.get(this.owner), users.get(userID)])
-      .then(([owner, user]) => {
+  trade(type, user) {
+    Users.get(this.owner)
+      .then((owner) => {
         this.requestedForTradeBy = user.id;
-
         return this.save();
       });
   }
