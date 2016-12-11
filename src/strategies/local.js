@@ -8,11 +8,13 @@ passport.use(new Strategy({
   usernameField: 'email',
 },
   (email, password, done) => {
-    Users.findByEmail(email)
+    Users
+      .findByEmail(email)
       .then((user) => {
         if (!user) return done(null, false);
 
-        bcrypt.compare(password, user.password)
+        bcrypt
+          .compare(password, user.password)
           .then((res) => {
             if (!res) return done(null, false);
             return done(null, user);
@@ -28,7 +30,8 @@ passport.serializeUser((user, done) => {
 });
 
 passport.deserializeUser((user, done) => {
-  Users.get(user.id)
+  Users
+    .get(user.id)
     .then(user => done(null, user));
 });
 

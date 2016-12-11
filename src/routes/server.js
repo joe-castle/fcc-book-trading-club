@@ -16,19 +16,20 @@ import client from '../client';
 const app = express();
 // const RedisStore = connectRedis(session);
 
-app.use('/assets', express.static(`${__dirname}/../assets`));
-app.use(bodyParser.json());
-// app.use(cookieParser());
-// app.use(session({
+app
+  .use('/assets', express.static(`${__dirname}/../assets`))
+  .use(bodyParser.json())
+//  .use(cookieParser())
+//  .use(session({
 //   store: new RedisStore({ client }),
 //   secret: 'NEEDS TO BE CHANGED',
 //   resave: false,
 //   saveUninitialized: false
-// }));
-app.use(passport.initialize());
-app.use(passport.session());
-app.use(books);
-app.use(users);
-app.get('*', render);
+// }))
+  .use(passport.initialize())
+  .use(passport.session())
+  .use(books)
+  .use(users)
+  .get('*', render)
 
 export default app;

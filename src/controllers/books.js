@@ -6,34 +6,31 @@ import Users from '../models/Users';
 
 const booksRouter = Router();
 
-// const user = new Users({
-//   id: 'rkYaTyo7l',
-//   name: 'joe',
-//   email: 'test@test.com',
-//   password: '$2a$10$E0/u2Kded2tizBmRwPQVE.fsTn0E/XznK1P0HF5jNcpSWa.n/Tmrm',
-//   city: 'london',
-//   state: 'essex',
-//   ownBooks: ['rkkiyxjXx'],
-//   outboundTradeRequests: [],
-//   inboundTradeRequests: [],
-// });
+const user = new Users({
+  id: 'BJjZ8rs7e',
+  name: 'joe',
+  email: 'test@test.com',
+  password: '$2a$10$.Bte8pN/WlLwj0KZvOpJOeq/t80cAdMSLOhOv39FaMMndHnwlBKF.',
+  city: '',
+  state: '',
+  ownBooks: [],
+  outboundTradeRequests: ['rJpX8SsQl'],
+  inboundTradeRequests: [],
+});
 
-// const user = new Users({
-//   'id': 'BkIVOyimg',
-//   name: 'hayley',
-//   email: 'test2@test.com',
-//   password: '$2a$10$7l9QWCAqCTW3eRkB9E6rZ.0cYouYtYUXCS.zGa8oP.QHA11sFbM/C',
-//   'city': '',
-//   state: '',
-//   'ownBooks': [
-//     'Bk-Sd1sQx',
-//     'HJn5jJjXl',
-//   ],
-//   'outboundTradeRequests': [],
-//   'inboundTradeRequests': [
-//     'Bk-Sd1sQx',
-//   ],
-// });
+const user2 = new Users({
+  id: 'ry_zUHsmx',
+  name: 'hayley',
+  email: 'test2@test.com',
+  password: '$2a$10$up1XjhpkIVH.lFO1QsyPs.jVUPgOLhhXPaKoI.gRyyF1DXDiH7KDW',
+  city: '',
+  state: '',
+  ownBooks: [
+    'rJpX8SsQl',
+  ],
+  outboundTradeRequests: [],
+  inboundTradeRequests: ['rJpX8SsQl'],
+});
 
 booksRouter.get('/api/books', (req, res) => {
   Books
@@ -66,7 +63,8 @@ booksRouter.post('/api/books/:title', (req, res) => {
 
         user.update({ ownBooks: [...user.ownBooks, book.id] });
 
-        Promise.all([book.save(), user.save()])
+        Promise
+          .all([book.save(), user.save()])
           .then(() => res.status(201).send(book));
       } else {
         res.status(404).send('Book not found.');
@@ -80,10 +78,12 @@ booksRouter.put('/api/books/:id', (req, res) => {
   Books
     .get(req.params.id)
     .then((book) => {
+      // TODO: const { user } = req;
+
       if (!book) return res.status(404).send('That book doesn\'t exist');
 
       if (
-        !trade 
+        !trade
         || trade !== 'request'
         && trade !== 'accept'
         && trade !== 'reject'
@@ -94,36 +94,65 @@ booksRouter.put('/api/books/:id', (req, res) => {
         );
       }
 
-      // Request context, user is the person requesting the book.
-      if (trade === 'request') {
-        if (book.owner === user.id) {
-          return res.status(400).send('You can\'t request a trade on a book that you already own!');
-        }
-
-        if (book.requestedForTradeBy !== '') {
-          return res.send('Sorry, someone has already requested this book.');
-        }
-
+      // Request and cancel context, user is the person requesting the book.
+      if (trade === 'request' || trade === 'cancel') {
         Users
           .get(book.owner)
           .then((owner) => {
-            user.update({ outboundTradeRequests: [...user.outboundTradeRequests, book.id] });
-            book.update({ requestedForTradeBy: user.id });
-            owner.update({ inboundTradeRequests: [...owner.inboundTradeRequests, book.id] });
+            if (trade === 'request') {
+              if (book.owner === user.id) {
+                return res
+                  .status(400)
+                  .send('You can\'t request a trade on a book that you already own!');
+              }
 
-            Promise.all([user.save(), book.save(), owner.save()])
-              .then(() => res.send('Trade request accpeted'));
+              if (book.requestedForTradeBy !== '') {
+                return res.status(400).send('Sorry, someone has already requested this book.');
+              }
+
+              book.update({ requestedForTradeBy: user.id });
+              user.update({ outboundTradeRequests: [...user.outboundTradeRequests, book.id] });
+              owner.update({ inboundTradeRequests: [...owner.inboundTradeRequests, book.id] });
+
+              Promise
+                .all([user.save(), book.save(), owner.save()])
+                .then(() => res.send('Trade request accpeted.'));
+            }
+
+            if (trade === 'cancel') {
+              if (book.requestedForTradeBy !== user.id) {
+                return res
+                  .status(400)
+                  .send('You can\'t cancel a trade on a book you haven\'t requested.');
+              }
+
+              book.update({ requestedForTradeBy: '' });
+              user.update({
+                outboundTradeRequests: user.outboundTradeRequests.filter(
+                  request => request !== book.id,
+                ),
+              });
+              owner.update({
+                inboundTradeRequests: owner.inboundTradeRequests.filter(
+                  request => request !== book.id,
+                ),
+              });
+
+              Promise
+                .all([user.save(), book.save(), owner.save()])
+                .then(() => res.send('Trade request cancelled.'));
+            }
           });
       }
 
       // Accept and reject context, user is the person has been reqested of.
       if (trade === 'accept' || trade === 'reject') {
         if (book.owner !== user.id) {
-          return res.send('You can\'t accept or reject a trade on a book you don\'t own');
+          return res.send('You can\'t accept or reject a trade on a book you don\'t own.');
         }
 
         if (book.requestedForTradeBy === '') {
-          return res.send('That book hasn\'t been requested for trade');
+          return res.send('That book hasn\'t been requested for trade.');
         }
 
         Users
@@ -139,12 +168,13 @@ booksRouter.put('/api/books/:id', (req, res) => {
               });
               requestee.update({
                 ownBooks: [...requestee.ownBooks, book.id],
-                outboundTradeRequests: user.outboundTradeRequests.filter(
+                outboundTradeRequests: requestee.outboundTradeRequests.filter(
                   request => request !== book.id,
                 ),
               });
 
-              Promise.all([book.save(), user.save(), requestee.save()])
+              Promise
+                .all([book.save(), user.save(), requestee.save()])
                 .then(() => res.send('Trade accepted.'));
             }
 
@@ -156,18 +186,17 @@ booksRouter.put('/api/books/:id', (req, res) => {
                 ),
               });
               requestee.update({
-                outboundTradeRequests: user.outboundTradeRequests.filter(
+                outboundTradeRequests: requestee.outboundTradeRequests.filter(
                   request => request !== book.id,
                 ),
               });
 
-              Promise.all([book.save(), user.save(), requestee.save()])
+              Promise
+                .all([book.save(), user.save(), requestee.save()])
                 .then(() => res.send({ book, user, requestee }));
             }
           });
       }
-
-      // Trade request cancel
     });
 });
 
@@ -184,7 +213,8 @@ booksRouter.delete('/api/books/:id', (req, res) => {
       if (book.owner === user.id) {
         user.update({ ownBooks: user.ownBooks.filter(ownBook => ownBook !== book.id) });
 
-        Promise.all([book.delete(), user.save()])
+        Promise
+          .all([book.delete(), user.save()])
           .then(() => res.send(`Deleted ${book.title}`));
       } else {
         return res.status(401).send('You\'re not authorised to delete this book');

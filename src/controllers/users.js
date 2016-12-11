@@ -20,7 +20,8 @@ const users = Router();
 users.put('/api/users', (req, res) => {
   // TODO: const { user } = req;
 
-  Users.get(user.id)
+  Users
+    .get(user.id)
     .then((user) => {
       user
         .update(req.body)
@@ -31,13 +32,16 @@ users.put('/api/users', (req, res) => {
 
 users.post('/signup', (req, res) => {
   if (!req.body.email || !req.body.name || !req.body.password) {
-    res.status(400)
+    res
+      .status(400)
       .send('Please provide a name, email and password to signup.');
   } else {
-    Users.findByEmail(req.body.email)
+    Users
+      .findByEmail(req.body.email)
       .then((user) => {
         if (user) {
-          res.status(409)
+          res
+            .status(409)
             .send('A user with that email already exists, please try again.');
         } else {
           const newUser = new Users({

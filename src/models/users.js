@@ -13,7 +13,8 @@ class Users {
   }
 
   static findByEmail(email) {
-    return users.getAll()
+    return users
+      .getAll()
       .then(users => {
         if (!users) return false;
 
@@ -72,7 +73,8 @@ class Users {
   exclude(toExclude) {
     const exclude = toExclude.split(' ');
 
-    return Object.keys(this)
+    return Object
+      .keys(this)
       .reduce((prev, curr) => {
         if (exclude.includes(curr)) {
           return prev;
