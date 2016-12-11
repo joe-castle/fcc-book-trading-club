@@ -1,24 +1,13 @@
-// import mongoose, { Schema } from 'mongoose';
-
-// export default mongoose.model('Books', new Schema({
-//   title: String,
-//   img_url: String,
-//   owner: String,
-//   requestedForTrade: {
-//     type: String,
-//     default: '',
-//   }
-// }));
-
-import { generate } from 'shortid'
+import { generate } from 'shortid';
 
 import actions from '../client/actions';
 
 const books = actions('books');
+const users = actions('users');
 
 class Books {
   static get(id) {
-    return id 
+    return id
       ? books.get(id).then(book => book && new Books(book))
       : books.getAll();
   }
@@ -27,28 +16,37 @@ class Books {
     return books.mset(data);
   }
 
-  constructor({ _id = generate(), title, img_url, owner, requestedForTrade = '' }) {
-    this._id = _id;
+  constructor({ id = generate(), title, imgUrl, owner, requestedForTradeBy = '' }) {
+    this.id = id;
     this.title = title;
-    this.img_url = img_url;
+    this.imgUrl = imgUrl;
     this.owner = owner;
-    this.requestedForTrade = requestedForTrade;
+    this.requestedForTradeBy = requestedForTradeBy;
   }
 
   save() {
-    return books.set(this._id, this);
+    return books.set(this.id, this);
   }
 
-  update({ owner = this.owner, requestedForTrade = this.requestedForTrade }) {
+  update({ owner = this.owner, requestedForTradeBy = this.requestedForTradeBy }) {
     this.owner = owner;
-    this.requestedForTrade = requestedForTrade;
+    this.requestedForTradeBy = requestedForTradeBy;
 
-    return save();
+    return this.save();
   }
 
   delete() {
-    return books.del(this._id);
+    return books.del(this.id);
   }
-} 
+
+  trade(type, userID) {
+    Promise.all([users.get(this.owner), users.get(userID)])
+      .then(([owner, user]) => {
+        this.requestedForTradeBy = user.id;
+
+        return this.save();
+      });
+  }
+}
 
 export default Books;

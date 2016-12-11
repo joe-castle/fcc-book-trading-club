@@ -28,7 +28,7 @@ app.use(bodyParser.json());
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(books);
-// app.use(users);
+app.use(users);
 app.get('*', render);
 
 export default app;

@@ -2,41 +2,34 @@ import bcrypt from 'bcrypt';
 import passport from 'passport';
 import { Strategy } from 'passport-local';
 
-import Users from '../models/users';
+import Users from '../models/Users';
 
 passport.use(new Strategy({
-    usernameField: 'email',
-  },
+  usernameField: 'email',
+},
   (email, password, done) => {
-    Users.findOne({ email })
-      .then(user => {
-        if (!user) { 
-          return done(null, false); 
-        }
+    Users.findByEmail(email)
+      .then((user) => {
+        if (!user) return done(null, false);
 
-        bcrypt.compare(password, user.password, (err, res) => {
-          if (err) {
-            throw err;
-          }
-
-          if (!res) { 
-            return done(null, false); 
-          }
-          // TODO: remove password
-          return done(null, user);
-        })
+        bcrypt.compare(password, user.password)
+          .then((res) => {
+            if (!res) return done(null, false);
+            return done(null, user);
+          })
+          .catch((err) => { throw err; });
       })
-      .catch(err => done(err))
-  }
+      .catch(err => done(err));
+  },
 ));
 
 passport.serializeUser((user, done) => {
-  done(null, user._id);
+  done(null, user.id);
 });
 
 passport.deserializeUser((user, done) => {
-  Users.findById(user._id, { password: 0 })
+  Users.get(user.id)
     .then(user => done(null, user));
 });
 
-export default passport
+export default passport;
