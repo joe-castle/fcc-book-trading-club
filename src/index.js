@@ -12,8 +12,8 @@ import configureStore from './store/configureStore';
 import Root from './Root';
 
 const store = configureStore(window.INITIAL_STATE);
-injectTapEventPlugin();
 
+injectTapEventPlugin();
 ReactDOM.render(
   <AppContainer>
     <MuiThemeProvider>

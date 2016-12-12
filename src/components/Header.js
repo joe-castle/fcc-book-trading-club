@@ -8,9 +8,9 @@ import { Actions } from '../actions';
 
 function Login() {
   return (
-    <div>
-      <Link to="/login"><FlatButton label="Login" /></Link>
-      <Link to="/signup"><FlatButton label="Signup" /></Link>
+    <div style={{ marginTop: '5px' }}>
+      <Link to="/login"><FlatButton style={{ color: '#fff' }} label="Login" /></Link>
+      <Link to="/signup"><FlatButton style={{ color: '#fff' }} label="Signup" /></Link>
     </div>
   );
 }
@@ -18,7 +18,7 @@ function Login() {
 function Logged({ logOut }) {
   return (
     <IconMenu
-      iconButtonElement={<IconButton><MoreVertIcon /></IconButton>}
+      iconButtonElement={<IconButton><MoreVertIcon style={{ color: '#fff' }} /></IconButton>}
       targetOrigin={{ horizontal: 'right', vertical: 'top' }}
       anchorOrigin={{ horizontal: 'right', vertical: 'top' }}
     >

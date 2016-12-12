@@ -12,10 +12,10 @@ const arrayMiddleWare = ({ dispatch }) => next => (action) => {
 export default (initialState) => {
   const store = createStore(rootReducer, initialState, compose(
     applyMiddleware(thunk, arrayMiddleWare),
-    window.devToolsExtension ? window.devToolsExtension() : f => f,
+    window.devToolsExtension && module.hot ? window.devToolsExtension() : f => f,
   ));
 
-  if (process.env.NODE_ENV !== 'production' && module.hot) {
+  if (module.hot) {
     module.hot.accept('../reducers', () =>
       /* eslint-disable global-require */
       store.replaceReducer(require('../reducers').default),
