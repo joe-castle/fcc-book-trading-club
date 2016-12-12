@@ -3,8 +3,15 @@ import { Constants } from '../actions';
 export default function users(state = {}, {
   type,
   bookId,
+  payload,
 }) {
   switch (type) {
+    case Constants.ADD_USER:
+    case Constants.UPDATE_USER:
+      return payload;
+
+    case Constants.REMOVE_USER: return {};
+
     case Constants.ADD_OWN_BOOK:
       return {
         ...state,
@@ -41,9 +48,7 @@ export default function users(state = {}, {
         ...state,
         inboundTradeRequests: state.inboundTradeRequests.filter(id => id !== bookId),
       };
-    
 
-    default:
-      return state;
+    default: return state;
   }
 }

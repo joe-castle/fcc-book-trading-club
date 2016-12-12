@@ -57,7 +57,6 @@ export default function books(state = [], {
       ];
     }
 
-    default:
-      return state;
+    default: return state;
   }
 }

@@ -12,10 +12,12 @@ passport.use(new Strategy({
       .findByEmail(email)
       .then((user) => {
         if (!user) return done(null, false);
+
         bcrypt
           .compare(password, user.password)
-          .then((res) => {
-            if (!res) return done(null, false);
+          .then((result) => {
+            if (!result) return done(null, false);
+
             return done(null, user);
           })
           .catch(err => done(null, err));

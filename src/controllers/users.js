@@ -1,3 +1,4 @@
+import bcrypt from 'bcrypt';
 import { Router } from 'express';
 
 import { ensureAuthenticated } from '../middleware';
@@ -22,14 +23,26 @@ const users = Router();
 users.put('/api/users', ensureAuthenticated, (req, res) => {
   const { user } = req;
 
-  Users
-    .get(user.id)
-    .then((user) => {
-      user
-        .update(req.body)
-        .save()
-        .then(() => res.send(user));
-    });
+  if (req.body.oldPassword) {
+    bcrypt
+      .compare(req.body.oldPassword, user.password)
+      .then((result) => {
+        if (!result) {
+          return res.status(400).send('Your passwords don\'t match, please try again.');
+        }
+
+        user
+          .update({ password: req.body.newPassword })
+          .save()
+          .then(() => res.send(user.exclude('password')));
+      });
+  } else {
+    user
+      .update(req.body)
+      .save()
+      .then(() => res.send(user.exclude('password')));
+  }
+
 });
 
 users.post('/signup', (req, res) => {
@@ -69,6 +82,11 @@ users.post('/signup', (req, res) => {
 
 users.post('/login', passport.authenticate('local'), (req, res) => {
   res.send(req.user.exclude('password'));
+});
+
+users.post('/logout', (req, res) => {
+  req.logout();
+  res.end();
 });
 
 export default users;

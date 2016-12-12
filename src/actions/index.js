@@ -10,6 +10,9 @@ const { Actions, Constants } = EasyActions({
   TRADE_CANCEL: (bookId, userId) => ({ bookId, userId }),
   TRADE_ACCEPT: (bookId, userId) => ({ bookId, userId }),
   TRADE_REJECT: (bookId, userId) => ({ bookId, userId }),
+  ADD_USER: payload => ({ payload }),
+  UPDATE_USER: payload => ({ payload }),
+  REMOVE_USER: () => {},
 });
 
 Actions.POST_BOOK = title => (dispatch) => {
@@ -39,7 +42,7 @@ Actions.DELETE_BOOK = bookId => (dispatch) => {
 const PUT_BOOK = trade => bookId => (dispatch, getState) => {
   const userId = getState().user.id;
 
-  return axios
+  axios
     .put(`/api/books/${bookId}?trade=${trade}`)
     .then(() => {
       dispatch(Actions[`TRADE_${trade.toUpperCase()}`](bookId, userId));
@@ -51,5 +54,41 @@ Actions.PUT_TRADE_REQUEST = PUT_BOOK('request');
 Actions.PUT_TRADE_CANCEL = PUT_BOOK('cancel');
 Actions.PUT_TRADE_ACCEPT = PUT_BOOK('accept');
 Actions.PUT_TRADE_REJECT = PUT_BOOK('reject');
+
+Actions.SIGNUP = details => (dispatch) => {
+  axios
+    .post('/signup', details)
+    .then(({ data }) => {
+      dispatch(Actions.ADD_USER(data));
+    })
+    .catch(console.log);
+};
+
+Actions.LOGIN = details => (dispatch) => {
+  axios
+    .post('/login', details)
+    .then(({ data }) => {
+      dispatch(Actions.ADD_USER(data));
+    })
+    .catch(console.log);
+};
+
+Actions.LOGOUT = () => (dispatch) => {
+  axios
+    .post('/logout')
+    .then(() => {
+      dispatch(Actions.REMOVE_USER());
+    })
+    .catch(console.log);
+};
+
+Actions.PUT_USER = details => (dispatch) => {
+  axios
+    .put('/api/users', details)
+    .then(({ data }) => {
+      dispatch(Actions.UPDATE_USER(data));
+    })
+    .catch(console.log)
+} 
 
 export { Actions, Constants };
