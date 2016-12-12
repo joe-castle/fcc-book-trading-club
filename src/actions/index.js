@@ -2,17 +2,17 @@ import axios from 'axios';
 import EasyActions from 'redux-easy-actions';
 
 const { Actions, Constants } = EasyActions({
-  ADD_BOOK: payload => ({ payload }),
-  ADD_OWN_BOOK: bookId => ({ bookId }),
-  REMOVE_BOOK: bookId => ({ bookId }),
-  REMOVE_OWN_BOOK: bookId => ({ bookId }),
-  TRADE_REQUEST: (bookId, userId) => ({ bookId, userId }),
-  TRADE_CANCEL: (bookId, userId) => ({ bookId, userId }),
-  TRADE_ACCEPT: (bookId, userId) => ({ bookId, userId }),
-  TRADE_REJECT: (bookId, userId) => ({ bookId, userId }),
-  ADD_USER: payload => ({ payload }),
-  UPDATE_USER: payload => ({ payload }),
-  REMOVE_USER: () => {},
+  ADD_BOOK: (type, payload) => ({ type, payload }),
+  ADD_OWN_BOOK: (type, bookId) => ({ type, bookId }),
+  REMOVE_BOOK: (type, bookId) => ({ type, bookId }),
+  REMOVE_OWN_BOOK: (type, bookId) => ({ type, bookId }),
+  TRADE_REQUEST: (type, bookId, userId) => ({ type, bookId, userId }),
+  TRADE_CANCEL: (type, bookId, userId) => ({ type, bookId, userId }),
+  TRADE_ACCEPT: (type, bookId, userId) => ({ type, bookId, userId }),
+  TRADE_REJECT: (type, bookId, userId) => ({ type, bookId, userId }),
+  ADD_USER: (type, payload) => ({ type, payload }),
+  UPDATE_USER: (type, payload) => ({ type, payload }),
+  REMOVE_USER: type => ({ type }),
 });
 
 Actions.POST_BOOK = title => (dispatch) => {

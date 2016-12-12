@@ -14,7 +14,6 @@ export class App extends React.Component {
       <div className="App">
         <Header />
         <main>
-          <h1>Book Trading Club</h1>
           {this.props.children}
         </main>
       </div>

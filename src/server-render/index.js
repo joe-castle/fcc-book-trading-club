@@ -2,6 +2,8 @@ import React from 'react';
 import { createStore } from 'redux';
 import { Provider } from 'react-redux';
 import { match, RouterContext } from 'react-router';
+import { MuiThemeProvider } from 'material-ui';
+import getMuiTheme from 'material-ui/styles/getMuiTheme';
 
 import rootReducer from '../reducers';
 import routes from '../routes/react';
@@ -26,10 +28,13 @@ export default (req, res) => {
           const store = createStore(rootReducer, initialState);
 
           res.send(template(
-            // Provider allows connected components to get state properly
-            <Provider store={store}>
-              <RouterContext {...renderProps} />
-            </Provider>,
+            <MuiThemeProvider
+              muiTheme={getMuiTheme({ userAgent: req.headers['user-agent'] })}
+            >
+              <Provider store={store}>
+                <RouterContext {...renderProps} />
+              </Provider>
+            </MuiThemeProvider>,
             store.getState(),
           ));
         });
