@@ -6,10 +6,21 @@ import Login from '../components/Login';
 import Signup from '../components/Signup';
 import AllBooks from '../components/AllBooks';
 
-export default (
-  <Route path="/" component={App}>
-    <Route path="AllBooks" component={AllBooks} />
-    <Route path="signup" component={Signup} />
-    <Route path="login" component={Login} />
-  </Route>
-);
+export default function (state) {
+  function requireAuth(nextState, replace) {
+    if (!state.user.id) {
+      replace({
+        pathname: '/login',
+        state: { nextPathname: nextState.location.pathname },
+      });
+    }
+  }
+
+  return (
+    <Route path="/" component={App}>
+      <Route path="AllBooks" component={AllBooks} onEnter={requireAuth} />
+      <Route path="signup" component={Signup} />
+      <Route path="login" component={Login} />
+    </Route>
+  );
+};

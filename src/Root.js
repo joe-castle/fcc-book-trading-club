@@ -8,7 +8,7 @@ function Root({ store }) {
   return (
     <Router
       history={syncHistoryWithStore(browserHistory, store)}
-      routes={routes}
+      routes={routes(store.getState())}
     />
   );
 }
