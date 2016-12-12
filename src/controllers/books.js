@@ -1,44 +1,46 @@
 import { Router } from 'express';
 import axios from 'axios';
 
+import { ensureAuthenticated } from '../middleware';
+
 import Books from '../models/Books';
 import Users from '../models/Users';
 
 const booksRouter = Router();
 
-const user = new Users({
-  id: 'BJjZ8rs7e',
-  name: 'joe',
-  email: 'test@test.com',
-  password: '$2a$10$.Bte8pN/WlLwj0KZvOpJOeq/t80cAdMSLOhOv39FaMMndHnwlBKF.',
-  city: '',
-  state: '',
-  ownBooks: [],
-  outboundTradeRequests: ['rJpX8SsQl'],
-  inboundTradeRequests: [],
-});
+// const user = new Users({
+//   id: 'BJjZ8rs7e',
+//   name: 'joe',
+//   email: 'test@test.com',
+//   password: '$2a$10$.Bte8pN/WlLwj0KZvOpJOeq/t80cAdMSLOhOv39FaMMndHnwlBKF.',
+//   city: '',
+//   state: '',
+//   ownBooks: [],
+//   outboundTradeRequests: ['rJpX8SsQl'],
+//   inboundTradeRequests: [],
+// });
 
-const user2 = new Users({
-  id: 'ry_zUHsmx',
-  name: 'hayley',
-  email: 'test2@test.com',
-  password: '$2a$10$up1XjhpkIVH.lFO1QsyPs.jVUPgOLhhXPaKoI.gRyyF1DXDiH7KDW',
-  city: '',
-  state: '',
-  ownBooks: [
-    'rJpX8SsQl',
-  ],
-  outboundTradeRequests: [],
-  inboundTradeRequests: ['rJpX8SsQl'],
-});
+// const user2 = new Users({
+//   id: 'ry_zUHsmx',
+//   name: 'hayley',
+//   email: 'test2@test.com',
+//   password: '$2a$10$up1XjhpkIVH.lFO1QsyPs.jVUPgOLhhXPaKoI.gRyyF1DXDiH7KDW',
+//   city: '',
+//   state: '',
+//   ownBooks: [
+//     'rJpX8SsQl',
+//   ],
+//   outboundTradeRequests: [],
+//   inboundTradeRequests: ['rJpX8SsQl'],
+// });
 
-booksRouter.get('/api/books', (req, res) => {
+booksRouter.get('/api/books', ensureAuthenticated, (req, res) => {
   Books
     .get()
     .then(books => res.send(books));
 });
 
-booksRouter.get('/api/books/:id', (req, res) => {
+booksRouter.get('/api/books/:id', ensureAuthenticated, (req, res) => {
   Books
     .get(req.params.id)
     .then((book) => {
@@ -48,11 +50,11 @@ booksRouter.get('/api/books/:id', (req, res) => {
     });
 });
 
-booksRouter.post('/api/books/:title', (req, res) => {
+booksRouter.post('/api/books/:title', ensureAuthenticated, (req, res) => {
   axios
     .get(`https://www.googleapis.com/books/v1/volumes?q=${req.params.title}`)
     .then(({ data }) => {
-      // TODO: const { user } = req;
+      const { user } = req;
 
       if (data.items) {
         const book = new Books({
@@ -72,13 +74,12 @@ booksRouter.post('/api/books/:title', (req, res) => {
     });
 });
 
-booksRouter.put('/api/books/:id', (req, res) => {
-  const { trade } = req.query;
-
+booksRouter.put('/api/books/:id', ensureAuthenticated, (req, res) => {
   Books
     .get(req.params.id)
     .then((book) => {
-      // TODO: const { user } = req;
+      const { user } = req;
+      const { trade } = req.query;
 
       if (!book) return res.status(404).send('That book doesn\'t exist');
 
@@ -200,12 +201,12 @@ booksRouter.put('/api/books/:id', (req, res) => {
     });
 });
 
-booksRouter.delete('/api/books/:id', (req, res) => {
-  // TODO: const { user } = req;
-
+booksRouter.delete('/api/books/:id', ensureAuthenticated, (req, res) => {
   Books
     .get(req.params.id)
     .then((book) => {
+      const { user } = req;
+
       if (!book) {
         return res.status(404).send('That book doesn\'t exist');
       }

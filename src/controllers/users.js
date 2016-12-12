@@ -1,5 +1,7 @@
 import { Router } from 'express';
 
+import { ensureAuthenticated } from '../middleware';
+
 import Users from '../models/Users';
 import passport from '../strategies/local';
 
@@ -17,8 +19,8 @@ const users = Router();
 //   inboundTradeRequests: [],
 // });
 
-users.put('/api/users', (req, res) => {
-  // TODO: const { user } = req;
+users.put('/api/users', ensureAuthenticated, (req, res) => {
+  const { user } = req;
 
   Users
     .get(user.id)
@@ -57,7 +59,7 @@ users.post('/signup', (req, res) => {
               req.login(newUser, (err) => {
                 if (err) throw err;
 
-                res.status(201).send(newUser /* TODO:.exclude('password')*/);
+                res.status(201).send(newUser.exclude('password'));
               });
             });
         }

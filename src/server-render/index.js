@@ -7,9 +7,8 @@ import rootReducer from '../reducers';
 import routes from '../routes/react';
 import template from './template';
 
-// TODO: provide INITIAL_STATE
-
-const store = createStore(rootReducer);
+import Users from '../models/Users';
+import Books from '../models/Books';
 
 export default (req, res) => {
   match({ routes, location: req.url }, (error, redirectLocation, renderProps) => {
@@ -18,13 +17,22 @@ export default (req, res) => {
     } else if (redirectLocation) {
       res.redirect(302, redirectLocation.pathname + redirectLocation.search);
     } else if (renderProps) {
-      // Provider allows connected components to get state properly
-      res.send(template(
-        <Provider store={store}>
-          <RouterContext {...renderProps} />
-        </Provider>,
-        store.getState(),
-      ));
+      Promise.all([Books.get(), req.user && Users.get(req.user.id)])
+        .then(([books, user]) => {
+          const initialState = { books };
+
+          if (user) initialState.user = user.exclude('password');
+
+          const store = createStore(rootReducer, initialState);
+
+          res.send(template(
+            // Provider allows connected components to get state properly
+            <Provider store={store}>
+              <RouterContext {...renderProps} />
+            </Provider>,
+            store.getState(),
+          ));
+        });
     } else {
       res.status(404).send('Not Found');
     }

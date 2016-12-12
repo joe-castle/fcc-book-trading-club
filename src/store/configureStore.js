@@ -3,9 +3,15 @@ import thunk from 'redux-thunk'
 
 import rootReducer from '../reducers';
 
+const arrayMiddleWare = ({ dispatch }) => next => (action) => {
+  if (Array.isArray(action)) return action.forEach(item => dispatch(item));
+
+  return next(action);
+};
+
 export default (initialState) => {
   const store = createStore(rootReducer, initialState, compose(
-    applyMiddleware(thunk),
+    applyMiddleware(thunk, arrayMiddleWare),
     window.devToolsExtension ? window.devToolsExtension() : f => f,
   ));
 

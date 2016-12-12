@@ -12,7 +12,6 @@ passport.use(new Strategy({
       .findByEmail(email)
       .then((user) => {
         if (!user) return done(null, false);
-
         bcrypt
           .compare(password, user.password)
           .then((res) => {
@@ -29,9 +28,9 @@ passport.serializeUser((user, done) => {
   done(null, user.id);
 });
 
-passport.deserializeUser((user, done) => {
+passport.deserializeUser((id, done) => {
   Users
-    .get(user.id)
+    .get(id)
     .then(user => done(null, user));
 });
 
