@@ -17,6 +17,32 @@ export default function users(state = {}, {
         ownBooks: state.ownBooks.filter(id => id !== bookId),
       };
 
+    case Constants.TRADE_REQUEST:
+      return {
+        ...state,
+        outboundTradeRequests: [...state.outboundTradeRequests, bookId],
+      };
+
+    case Constants.TRADE_CANCEL:
+      return {
+        ...state,
+        outboundTradeRequests: state.outboundTradeRequests.filter(id => id !== bookId),
+      };
+
+    case Constants.TRADE_ACCEPT:
+      return {
+        ...state,
+        ownBooks: state.ownBooks.filter(id => id !== bookId),
+        inboundTradeRequests: state.inboundTradeRequests.filter(id => id !== bookId),
+      };
+
+    case Constants.TRADE_REJECT:
+      return {
+        ...state,
+        inboundTradeRequests: state.inboundTradeRequests.filter(id => id !== bookId),
+      };
+    
+
     default:
       return state;
   }

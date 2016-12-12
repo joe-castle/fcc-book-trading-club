@@ -34,6 +34,7 @@ const booksRouter = Router();
 //   inboundTradeRequests: ['rJpX8SsQl'],
 // });
 
+// TODO: Unecassary?
 booksRouter.get('/api/books', ensureAuthenticated, (req, res) => {
   Books
     .get()
@@ -149,11 +150,15 @@ booksRouter.put('/api/books/:id', ensureAuthenticated, (req, res) => {
       // Accept and reject context, user is the person has been reqested of.
       if (trade === 'accept' || trade === 'reject') {
         if (book.owner !== user.id) {
-          return res.send('You can\'t accept or reject a trade on a book you don\'t own.');
+          return res
+            .status(400)
+            .send('You can\'t accept or reject a trade on a book you don\'t own.');
         }
 
         if (book.requestedForTradeBy === '') {
-          return res.send('That book hasn\'t been requested for trade.');
+          return res
+            .status(400)
+            .send('That book hasn\'t been requested for trade.');
         }
 
         Users

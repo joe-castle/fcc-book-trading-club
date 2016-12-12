@@ -6,13 +6,13 @@ const { Actions, Constants } = EasyActions({
   ADD_OWN_BOOK: bookId => ({ bookId }),
   REMOVE_BOOK: bookId => ({ bookId }),
   REMOVE_OWN_BOOK: bookId => ({ bookId }),
-  TRADE_REQUEST: bookId => ({ bookId }),
-  TRADE_CANCEL: bookId => ({ bookId }),
-  TRADE_ACCEPT: bookId => ({ bookId }),
-  TRADE_REJECT: bookId => ({ bookId }),
+  TRADE_REQUEST: (bookId, userId) => ({ bookId, userId }),
+  TRADE_CANCEL: (bookId, userId) => ({ bookId, userId }),
+  TRADE_ACCEPT: (bookId, userId) => ({ bookId, userId }),
+  TRADE_REJECT: (bookId, userId) => ({ bookId, userId }),
 });
 
-const POST_BOOK = title => (dispatch) => {
+Actions.POST_BOOK = title => (dispatch) => {
   axios
     .post(`/api/books/${title}`)
     .then(({ data }) => {
@@ -24,7 +24,7 @@ const POST_BOOK = title => (dispatch) => {
     .catch(console.log);
 };
 
-const DELETE_BOOK = bookId => (dispatch) => {
+Actions.DELETE_BOOK = bookId => (dispatch) => {
   axios
     .delete(`/api/books/${bookId}`)
     .then(() => {
@@ -36,27 +36,20 @@ const DELETE_BOOK = bookId => (dispatch) => {
     .catch(console.log);
 };
 
-const PUT_BOOK = trade => bookId => (dispatch) => (
-  axios
+const PUT_BOOK = trade => bookId => (dispatch, getState) => {
+  const userId = getState().user.id;
+
+  return axios
     .put(`/api/books/${bookId}?trade=${trade}`)
     .then(() => {
-      dispatch(Actions[`TRADE_${trade}`]);
+      dispatch(Actions[`TRADE_${trade.toUpperCase()}`](bookId, userId));
     })
-    .catch(console.log)
-);
+    .catch(console.log);
+};
 
-const PUT_TRADE_REQUEST = PUT_BOOK('request');
-const PUT_TRADE_CANCEL = PUT_BOOK('cancel');
-const PUT_TRADE_ACCEPT = PUT_BOOK('accept');
-const PUT_TRADE_REJECT = PUT_BOOK('reject');
-
+Actions.PUT_TRADE_REQUEST = PUT_BOOK('request');
+Actions.PUT_TRADE_CANCEL = PUT_BOOK('cancel');
+Actions.PUT_TRADE_ACCEPT = PUT_BOOK('accept');
+Actions.PUT_TRADE_REJECT = PUT_BOOK('reject');
 
 export { Actions, Constants };
-export {
-  POST_BOOK,
-  DELETE_BOOK,
-  PUT_TRADE_REQUEST,
-  PUT_TRADE_CANCEL,
-  PUT_TRADE_ACCEPT,
-  PUT_TRADE_REJECT,
-};
