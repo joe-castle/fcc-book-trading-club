@@ -1,6 +1,6 @@
 import axios from 'axios';
 import EasyActions from 'redux-easy-actions';
-import { browserHistory } from 'react-router';
+import { push } from 'react-router-redux';
 
 const { Actions, Constants } = EasyActions({
   ADD_BOOK: (type, payload) => ({ type, payload }),
@@ -61,8 +61,10 @@ Actions.SIGNUP = details => (dispatch) => {
   axios
     .post('/signup', details)
     .then(({ data }) => {
-      dispatch(Actions.ADD_USER(data));
-      browserHistory.push('/allbooks');
+      dispatch([
+        Actions.ADD_USER(data),
+        push('/allbooks'),
+      ]);
     })
     .catch(console.log);
 };
@@ -71,8 +73,10 @@ Actions.LOGIN = details => (dispatch) => {
   axios
     .post('/login', details)
     .then(({ data }) => {
-      dispatch(Actions.ADD_USER(data));
-      browserHistory.push('/allbooks');
+      dispatch([
+        Actions.ADD_USER(data),
+        push('/allbooks'),
+      ]);
     })
     .catch(console.log);
 };

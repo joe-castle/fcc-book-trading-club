@@ -6,9 +6,9 @@ import Login from '../components/Login';
 import Signup from '../components/Signup';
 import AllBooks from '../components/AllBooks';
 
-export default function (state) {
+export default function (getState) {
   function requireAuth(nextState, replace) {
-    if (!state.user.id) {
+    if (!getState().user.id) {
       replace({
         pathname: '/login',
         state: { nextPathname: nextState.location.pathname },
