@@ -229,7 +229,7 @@ booksRouter.delete('/api/books/:id', ensureAuthenticated, (req, res) => {
 });
 
 if (process.env.NODE_ENV === 'development') {
-  booksRouter.get('/api/seed', (req, res) => {
+  booksRouter.get('/api/books/seed', (req, res) => {
     Books.seed([
       {
         _id: 3550186490,

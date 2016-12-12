@@ -13,7 +13,7 @@ export class App extends React.Component {
     return (
       <div className="App">
         <Header />
-        <main style={{ maxWidth: '800px', margin: '0 auto', padding: '10px' }}>
+        <main style={{ maxWidth: '960px', margin: '0 auto', padding: '10px' }}>
           {this.props.children}
         </main>
       </div>

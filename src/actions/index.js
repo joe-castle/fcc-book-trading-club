@@ -85,7 +85,10 @@ Actions.LOGOUT = () => (dispatch) => {
   axios
     .post('/logout')
     .then(() => {
-      dispatch(Actions.REMOVE_USER());
+      dispatch([
+        Actions.REMOVE_USER(),
+        push('/login'),
+      ]);
     })
     .catch(console.log);
 };

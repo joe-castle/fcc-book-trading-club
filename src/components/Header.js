@@ -22,9 +22,9 @@ function Logged({ logOut }) {
       targetOrigin={{ horizontal: 'right', vertical: 'top' }}
       anchorOrigin={{ horizontal: 'right', vertical: 'top' }}
     >
-      <MenuItem primaryText="All Books" />
-      <MenuItem primaryText="My Books" />
-      <MenuItem primaryText="Settings" />
+      <Link style={{ textDecoration: 'none' }} to="/allbooks"><MenuItem primaryText="All Books" /></Link>
+      <Link style={{ textDecoration: 'none' }} to="/mybooks"><MenuItem primaryText="My Books" /></Link>
+      <Link style={{ textDecoration: 'none' }} to="/settings"><MenuItem primaryText="Settings" /></Link>
       <MenuItem
         onTouchTap={logOut}
         primaryText="Sign out"

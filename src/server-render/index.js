@@ -13,14 +13,19 @@ import Users from '../models/Users';
 import Books from '../models/Books';
 
 export default (req, res) => {
-  match({ routes: routes(() => ({ user: '' })), location: req.url }, (error, redirectLocation, renderProps) => {
+  const { user } = req;
+
+  match({
+    routes: routes(() => ({ user })),
+    location: req.url,
+  }, (error, redirectLocation, renderProps) => {
     if (error) {
       res.status(500).send(error.message);
     } else if (redirectLocation) {
       res.redirect(302, redirectLocation.pathname + redirectLocation.search);
     } else if (renderProps) {
-      Promise.all([Books.get(), req.user && Users.get(req.user.id)])
-        .then(([books, user]) => {
+      Books.get()
+        .then((books) => {
           const initialState = { books };
 
           if (user) initialState.user = user.exclude('password');

@@ -5,6 +5,7 @@ import App from '../components/App';
 import Login from '../components/Login';
 import Signup from '../components/Signup';
 import AllBooks from '../components/AllBooks';
+import MyBooks from '../components/MyBooks';
 
 export default function (getState) {
   function requireAuth(nextState, replace) {
@@ -18,9 +19,10 @@ export default function (getState) {
 
   return (
     <Route path="/" component={App}>
-      <Route path="AllBooks" component={AllBooks} onEnter={requireAuth} />
+      <Route path="allbooks" component={AllBooks} onEnter={requireAuth} />
+      <Route path="mybooks" component={MyBooks} onEnter={requireAuth} />
       <Route path="signup" component={Signup} />
       <Route path="login" component={Login} />
     </Route>
   );
-};
+}

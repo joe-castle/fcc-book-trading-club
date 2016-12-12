@@ -11,7 +11,7 @@ export default (hash) => ({
   mset(data) {
     return client.hmset(hash, data.reduce((prev, curr) => [
       ...prev,
-      JSON.stringify(curr._id), 
+      JSON.stringify(curr.id), 
       JSON.stringify(curr),
     ], []));
   },
