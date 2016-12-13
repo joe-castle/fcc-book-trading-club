@@ -57,7 +57,6 @@ Actions.PUT_TRADE_ACCEPT = PUT_BOOK('accept');
 Actions.PUT_TRADE_REJECT = PUT_BOOK('reject');
 
 Actions.SIGNUP = details => (dispatch) => {
-  console.log(details)
   axios
     .post('/signup', details)
     .then(({ data }) => {

@@ -4,6 +4,7 @@ import { Route } from 'react-router';
 import App from '../components/App';
 import Login from '../components/Login';
 import Signup from '../components/Signup';
+import Settings from '../components/Settings';
 import AllBooks from '../components/AllBooks';
 import MyBooks from '../components/MyBooks';
 
@@ -23,6 +24,7 @@ export default function (getState) {
       <Route path="mybooks" component={MyBooks} onEnter={requireAuth} />
       <Route path="signup" component={Signup} />
       <Route path="login" component={Login} />
+      <Route path="settings" component={Settings} onEnter={requireAuth} />
     </Route>
   );
 }
