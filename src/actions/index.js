@@ -14,6 +14,8 @@ const { Actions, Constants } = EasyActions({
   ADD_USER: (type, payload) => ({ type, payload }),
   UPDATE_USER: (type, payload) => ({ type, payload }),
   REMOVE_USER: type => ({ type }),
+  OPEN_ERROR: (type, message) => ({ type, message }),
+  CLOSE_ERROR: (type, message) => ({ type, message }),
 });
 
 Actions.POST_BOOK = title => (dispatch) => {
@@ -25,7 +27,7 @@ Actions.POST_BOOK = title => (dispatch) => {
         Actions.ADD_OWN_BOOK(data.id),
       ]);
     })
-    .catch(console.log);
+    .catch(({ response }) => dispatch(Actions.OPEN_ERROR(response.data)));
 };
 
 Actions.DELETE_BOOK = bookId => (dispatch) => {
@@ -37,7 +39,7 @@ Actions.DELETE_BOOK = bookId => (dispatch) => {
         Actions.REMOVE_BOOK(bookId),
       ]);
     })
-    .catch(console.log);
+    .catch(({ response }) => dispatch(Actions.OPEN_ERROR(response.data)));
 };
 
 const PUT_BOOK = trade => bookId => (dispatch, getState) => {
@@ -48,7 +50,7 @@ const PUT_BOOK = trade => bookId => (dispatch, getState) => {
     .then(() => {
       dispatch(Actions[`TRADE_${trade.toUpperCase()}`](bookId, userId));
     })
-    .catch(console.log);
+    .catch(({ response }) => dispatch(Actions.TOGGLE_ERROR(response.data)));
 };
 
 Actions.PUT_TRADE_REQUEST = PUT_BOOK('request');
@@ -65,7 +67,7 @@ Actions.SIGNUP = details => (dispatch) => {
         push('/mybooks'),
       ]);
     })
-    .catch(console.log);
+    .catch(({ response }) => dispatch(Actions.OPEN_ERROR(response.data)));
 };
 
 Actions.LOGIN = details => (dispatch) => {
@@ -77,7 +79,7 @@ Actions.LOGIN = details => (dispatch) => {
         push('/mybooks'),
       ]);
     })
-    .catch(console.log);
+    .catch(({ response }) => dispatch(Actions.OPEN_ERROR(response.data)));
 };
 
 Actions.LOGOUT = () => (dispatch) => {
@@ -89,16 +91,19 @@ Actions.LOGOUT = () => (dispatch) => {
         Actions.REMOVE_USER(),
       ]);
     })
-    .catch(console.log);
+    .catch(({ response }) => dispatch(Actions.OPEN_ERROR(response.data)));
 };
 
 Actions.PUT_USER = details => (dispatch) => {
   axios
     .put('/api/users', details)
     .then(({ data }) => {
-      dispatch(Actions.UPDATE_USER(data));
+      dispatch([
+        Actions.UPDATE_USER(data),
+        Actions.OPEN_ERROR('Deetails updated.'),
+      ]);
     })
-    .catch(console.log)
+    .catch(({ response }) => dispatch(Actions.OPEN_ERROR(response.data)))
 } 
 
 export { Actions, Constants };

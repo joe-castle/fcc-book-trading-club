@@ -16,14 +16,14 @@ function Book({ book, owner, request, remove }) {
         <img src={book.imgUrl} alt={`${book.title} book cover`} />
       </CardMedia>
       <CardActions>
-        <RaisedButton 
+        <RaisedButton
           onTouchTap={request}
           label="Request Trade"
-          primary={!book.requestedForTradeBy}
+          primary
           disabled={!!book.requestedForTradeBy || owner}
         />
 
-        {owner && <RaisedButton 
+        {owner && <RaisedButton
           style={{ marginTop: '5px' }}
           onTouchTap={remove}
           label="Remove Book"
