@@ -23,6 +23,8 @@ var _Header = require('./Header');
 
 var _Header2 = _interopRequireDefault(_Header);
 
+var _actions = require('../actions');
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -43,6 +45,8 @@ var App = exports.App = function (_React$Component) {
   _createClass(App, [{
     key: 'render',
     value: function render() {
+      var _this2 = this;
+
       return _react2.default.createElement(
         'div',
         { className: 'App' },
@@ -52,6 +56,18 @@ var App = exports.App = function (_React$Component) {
           { style: { maxWidth: '960px', margin: '0 auto', padding: '10px' } },
           this.props.children
         ),
+        _react2.default.createElement(_materialUi.Snackbar, {
+          open: this.props.open,
+          action: 'x',
+          message: this.props.message,
+          autoHideDuration: 4000,
+          onActionTouchTap: function onActionTouchTap() {
+            return _this2.props.dispatch(_actions.Actions.CLOSE_ERROR());
+          },
+          onRequestClose: function onRequestClose() {
+            return _this2.props.dispatch(_actions.Actions.CLOSE_ERROR());
+          }
+        }),
         _react2.default.createElement(_materialUi.Divider, { style: { marginTop: '25px' } }),
         _react2.default.createElement(
           'footer',
@@ -80,4 +96,9 @@ var App = exports.App = function (_React$Component) {
 App.propTypes = {
   children: _react.PropTypes.element
 };
-exports.default = App;
+exports.default = (0, _reactRedux.connect)(function (state) {
+  return {
+    open: state.error.open,
+    message: state.error.message
+  };
+})(App);

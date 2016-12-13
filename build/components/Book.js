@@ -39,7 +39,7 @@ function Book(_ref) {
       _react2.default.createElement(_materialUi.RaisedButton, {
         onTouchTap: request,
         label: 'Request Trade',
-        primary: !book.requestedForTradeBy,
+        primary: true,
         disabled: !!book.requestedForTradeBy || owner
       }),
       owner && _react2.default.createElement(_materialUi.RaisedButton, {
