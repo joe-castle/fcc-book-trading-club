@@ -1,7 +1,8 @@
 import React from 'react';
-import { Route } from 'react-router';
+import { Route, IndexRoute } from 'react-router';
 
 import App from '../components/App';
+import Home from '../components/Home';
 import Login from '../components/Login';
 import Signup from '../components/Signup';
 import Settings from '../components/Settings';
@@ -20,6 +21,7 @@ export default function (getState) {
 
   return (
     <Route path="/" component={App}>
+      <IndexRoute component={Home} />
       <Route path="allbooks" component={AllBooks} onEnter={requireAuth} />
       <Route path="mybooks" component={MyBooks} onEnter={requireAuth} />
       <Route path="signup" component={Signup} />
