@@ -3,11 +3,13 @@ import { connect } from 'react-redux';
 
 import { Actions } from '../actions';
 
+import TradeControls from './TradeControls';
 import Book from './Book';
 
 function AllBooks({ books, user, dispatch }) {
   return (
     <div>
+      <TradeControls />
       <h1>All Books</h1>
       <div>
         {books.map(book => (

@@ -63,7 +63,7 @@ Actions.SIGNUP = details => (dispatch) => {
     .then(({ data }) => {
       dispatch([
         Actions.ADD_USER(data),
-        push('/allbooks'),
+        push('/mybooks'),
       ]);
     })
     .catch(console.log);
@@ -75,7 +75,7 @@ Actions.LOGIN = details => (dispatch) => {
     .then(({ data }) => {
       dispatch([
         Actions.ADD_USER(data),
-        push('/allbooks'),
+        push('/mybooks'),
       ]);
     })
     .catch(console.log);
@@ -86,8 +86,8 @@ Actions.LOGOUT = () => (dispatch) => {
     .post('/logout')
     .then(() => {
       dispatch([
-        Actions.REMOVE_USER(),
         push('/login'),
+        Actions.REMOVE_USER(),
       ]);
     })
     .catch(console.log);

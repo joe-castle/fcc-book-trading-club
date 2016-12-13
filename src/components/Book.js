@@ -20,7 +20,7 @@ function Book({ book, owner, request }) {
           onTouchTap={request}
           label="Request Trade"
           primary={!book.requestedForTradeBy}
-          disabled={book.requestedForTradeBy || owner}
+          disabled={!!book.requestedForTradeBy || owner}
         />
       </CardActions>
     </Card>
