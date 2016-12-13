@@ -49,6 +49,7 @@ class MyBooks extends React.Component {
               <Book 
                 book={book} 
                 owner={book.owner === user.id}
+                remove={() => dispatch(Actions.DELETE_BOOK(bookId))}
               />
             );
           })}

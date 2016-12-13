@@ -33,8 +33,8 @@ Actions.DELETE_BOOK = bookId => (dispatch) => {
     .delete(`/api/books/${bookId}`)
     .then(() => {
       dispatch([
-        Actions.REMOVE_BOOK(bookId),
         Actions.REMOVE_OWN_BOOK(bookId),
+        Actions.REMOVE_BOOK(bookId),
       ]);
     })
     .catch(console.log);

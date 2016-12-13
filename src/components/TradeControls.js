@@ -23,11 +23,11 @@ class TradeControls extends React.Component {
       <div style={{ margin: '25px 0' }}>
         <RaisedButton
           primary
+          style={{ marginRight: '10px', marginBottom: '10px' }}
           onTouchTap={() => this.setState({ outboundTradesOpen: !this.state.outboundTradesOpen })}
           label={`Your trade requests (${user.outboundTradeRequests.length}) outstanding`}
         />
         <RaisedButton
-          style={{ marginLeft: '10px' }}
           secondary
           onTouchTap={() => this.setState({ inboundTradesOpen: !this.state.inboundTradesOpen })}
           label={`Trade requests for you (${user.inboundTradeRequests.length}) unnaproved`}

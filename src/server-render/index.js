@@ -16,7 +16,7 @@ export default (req, res) => {
   const { user } = req;
 
   match({
-    routes: routes(() => ({ user })),
+    routes: routes(() => ({ user: user || {} })),
     location: req.url,
   }, (error, redirectLocation, renderProps) => {
     if (error) {

@@ -2,7 +2,7 @@ import React from 'react';
 
 import { Card, CardActions, CardMedia, RaisedButton } from 'material-ui';
 
-function Book({ book, owner, request }) {
+function Book({ book, owner, request, remove }) {
   return (
     <Card
       key={book.id}
@@ -22,6 +22,13 @@ function Book({ book, owner, request }) {
           primary={!book.requestedForTradeBy}
           disabled={!!book.requestedForTradeBy || owner}
         />
+
+        {owner && <RaisedButton 
+          style={{ marginTop: '5px' }}
+          onTouchTap={remove}
+          label="Remove Book"
+          secondary
+        />}
       </CardActions>
     </Card>
   );
