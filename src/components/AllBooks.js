@@ -1,36 +1,28 @@
 import React from 'react';
-import { connect } from 'react-redux'
-import { Card, CardActions, CardMedia, CardTitle, RaisedButton } from 'material-ui';
+import { connect } from 'react-redux';
 
-function AllBooks({ books }) {
+import { Actions } from '../actions';
+
+import Book from './Book';
+
+function AllBooks({ books, user, dispatch }) {
   return (
     <div>
       <h1>All Books</h1>
       <div>
         {books.map(book => (
-          <Card
-            key={book.id}
-            style={{
-              display: 'inline-block',
-              margin: '5px',
-              width: '200px',
-            }}
-          >
-            <CardMedia>
-              <img src={book.imgUrl} alt={`${book.title} book cover`} />
-            </CardMedia>
-            <CardActions>
-              <RaisedButton 
-                label="Request Trade"
-                primary={!book.requestedForTradeBy}
-                disabled={book.requestedForTradeBy}
-              />
-            </CardActions>
-          </Card>
+          <Book 
+            book={book} 
+            owner={book.owner === user.id}
+            request={() => dispatch(Actions.PUT_TRADE_REQUEST(book.id))} 
+          />
         ))}
       </div>
     </div>
   );
 }
 
-export default connect(state => ({ books: state.books }))(AllBooks);
+export default connect(state => ({
+  books: state.books,
+  user: state.user,
+}))(AllBooks);

@@ -1,8 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux'
-import { Card, CardActions, CardMedia, CardTitle, FlatButton, RaisedButton, TextField } from 'material-ui';
+import { RaisedButton, TextField } from 'material-ui';
 
 import { Actions } from '../actions';
+
+import TradeControls from './TradeControls';
+import Book from './Book';
 
 class MyBooks extends React.Component {
   constructor() {
@@ -17,6 +20,7 @@ class MyBooks extends React.Component {
 
     return (
       <div>
+        <TradeControls />
         <h1>My Books</h1>
         <form
           style={{ marginBottom: '20px' }}
@@ -42,22 +46,10 @@ class MyBooks extends React.Component {
             const book = books.find(book => book.id === bookId);
 
             return (
-              <Card
-                key={bookId}
-                style={{
-                  display: 'inline-block',
-                  margin: '5px',
-                  width: '200px',
-                }}
-              >
-                <CardMedia>
-                  <img src={book.imgUrl} alt={`${book.title} book cover`} />
-                </CardMedia>
-
-                <CardActions>
-                  <FlatButton label="Request Trade" />
-                </CardActions>
-              </Card>
+              <Book 
+                book={book} 
+                owner={book.owner === user.id}
+              />
             );
           })}
         </div>
